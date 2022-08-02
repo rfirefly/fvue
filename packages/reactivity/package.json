@@ -1,0 +1,14 @@
+{
+  "name": "reactivity",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "buildOptions": {
+    "name": "FReactivity",
+    "format": [
+      "global",
+      "cjs",
+      "esm-bundler"
+    ]
+  }
+}

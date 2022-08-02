@@ -1,0 +1,13 @@
+{
+  "name": "runtime-core",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "buildOptions": {
+    "name": "FRuntimeCore",
+    "format": [
+      "cjs",
+      "esm-bundler"
+    ]
+  }
+}

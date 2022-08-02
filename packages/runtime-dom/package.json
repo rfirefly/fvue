@@ -1,0 +1,14 @@
+{
+  "name": "runtime-dom",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "buildOptions": {
+    "name": "FRuntimeDom",
+    "format": [
+      "global",
+      "cjs",
+      "esm-bundler"
+    ]
+  }
+}

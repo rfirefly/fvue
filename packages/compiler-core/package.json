@@ -1,0 +1,14 @@
+{
+  "name": "compiler-core",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "buildOptions": {
+    "name": "FCompilerCore",
+    "format": [
+      "global",
+      "cjs",
+      "esm-bundler"
+    ]
+  }
+}
