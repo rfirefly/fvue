@@ -1,5 +1,6 @@
 import { isNumber, isString } from '@FVue/shared'
 import { createVnode } from './vnode'
+import { Text } from './vnode'
 
 export const normalize = child => {
   // 处理文本节点

@@ -1,7 +1,7 @@
 import { isArray, isObject } from '@FVue/shared'
 import { createVnode, isVnode } from './vnode'
 
-export function h(type, propsOrChildren, children) {
+export function h(type, propsOrChildren = null, children?) {
   const len = arguments.length
   if (len === 2) {
     if (isObject(propsOrChildren) && !isArray(propsOrChildren)) {

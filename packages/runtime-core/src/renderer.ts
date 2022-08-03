@@ -35,7 +35,6 @@ export function createRenderer(renderOptions) {
 
   const patch = (n1, n2, container, anchor = null, parentComponent = null) => {
     if (n1 === n2) return
-
     if (n1 && !isSameNode(n1, n2)) {
       unmount(n1)
       n1 = null
@@ -59,10 +58,14 @@ export function createRenderer(renderOptions) {
           // teleport
           type.process(n1, n2, container, anchor, {
             mountChildren,
-            patchChildren
+            patchChildren,
+            move,
           })
         }
     }
+  }
+  const move = (vnode, target) => {
+    hostInsert(vnode.component ? vnode.component.subTree.el : vnode.el, target)
   }
 
   const processText = (n1, n2, container) => {
@@ -79,14 +82,20 @@ export function createRenderer(renderOptions) {
 
   const processFragment = (n1, n2, el, parentComponent) => {
     if (n1 === null) {
-      mountChildren(n2.children, el, parentComponent)
+      n2.children && mountChildren(n2.children, el, parentComponent)
     } else {
       // 直接走diff
       patchChildren(n1, n2, el, parentComponent)
     }
   }
 
-  const processComponent = (n1, n2, container, anchor, parentComponent = null) => {
+  const processComponent = (
+    n1,
+    n2,
+    container,
+    anchor,
+    parentComponent = null
+  ) => {
     if (n1 === null) {
       mountComponent(n2, container, anchor, parentComponent)
     } else {
@@ -122,13 +131,18 @@ export function createRenderer(renderOptions) {
         instance.subTree = subTree
       }
     }
-    const effect = new ReactiveEffect(componentUpdateFn, () => queneJob(instance.update))
+    const effect = new ReactiveEffect(componentUpdateFn, () =>
+      queneJob(instance.update)
+    )
     const update = (instance.update = effect.run.bind(effect))
     update()
   }
 
   const mountComponent = (vnode, container, anchor, parentComponent) => {
-    let instance = (vnode.component = createComponentInstance(vnode, parentComponent))
+    let instance = (vnode.component = createComponentInstance(
+      vnode,
+      parentComponent
+    ))
     setupComponent(instance)
     setupRenderEffect(instance, container, anchor)
   }
@@ -176,7 +190,11 @@ export function createRenderer(renderOptions) {
 
     if (n2.dynamicChildren) {
       // 靶向更新
-      patchBlockChildren(n1.dynamicChildren, n2.dynamicChildren, parentComponent)
+      patchBlockChildren(
+        n1.dynamicChildren,
+        n2.dynamicChildren,
+        parentComponent
+      )
     } else {
       // 全量更新
       patchChildren(n1, n2, el, parentComponent)
@@ -327,12 +345,19 @@ export function createRenderer(renderOptions) {
     }
   }
 
-  const unmount = vnode => {
+  const unmount = (vnode) => {
     if (!vnode) return
+    if (vnode.type === Fragment) {
+      unmountChildren(vnode)
+      return
+    } else if (vnode.shapeFlag & ShapeFlags.COMPONENT) {
+      hostRemove(vnode.component.subTree.el)
+      return
+    }
     hostRemove(vnode.el)
   }
 
-  const unmountChildren = children => {
+  const unmountChildren = (children) => {
     for (let i = 0; i < children.length; i++) {
       unmountChildren(children[i])
     }

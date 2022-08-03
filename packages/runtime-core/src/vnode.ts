@@ -13,7 +13,6 @@ export function isSameNode(n1, n2) {
 }
 
 export function createVnode(type, props, children = null, patchFlag = 0) {
-  console.log('🚀 ~ children', children)
   let shapeFlag = 0
   if (isString(type)) shapeFlag = ShapeFlags.ELEMENT
   if (isObject(type)) shapeFlag = ShapeFlags.STATEFUL_COMPONENT

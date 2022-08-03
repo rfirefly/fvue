@@ -9,4 +9,5 @@ export { getCurrentInstance } from './component'
 
 export { provide, inject } from './apiInject'
 
-export * from './components/Teleport'
+export { TeleportImpl as Teleport } from './components/Teleport'
+export { defineAsyncComponent } from './defineAsyncComponent'
