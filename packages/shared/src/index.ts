@@ -7,11 +7,11 @@ export const isFunction = (val: any) => {
 
 export const isArray = Array.isArray
 
-export const isString = val => {
+export const isString = (val) => {
   return typeof val === 'string'
 }
 
-export const isNumber = val => {
+export const isNumber = (val) => {
   return typeof val === 'number'
 }
 
@@ -34,19 +34,18 @@ export const enum ShapeFlags {
   COMPONENT = ShapeFlags.STATEFUL_COMPONENT | ShapeFlags.FUNCTIONAL_COMPONENT,
 }
 
-export const invokeFns = fns => {
+export const invokeFns = (fns) => {
   for (let i = 0; i < fns.length; i++) {
     fns[i]()
   }
 }
 
-
 export const enum NodeTypes {
-    TEXT = 'TEXT',
-    INTERPOLATION = 'INTERPOLATION',
-    SIMPLE_EXPRESSION = 'SIMPLE_EXPRESSION',
-    ELEMENT = 'ELEMENT',
-    ATTRIBUTE = 'ATTRIBUTE',
-    ROOT = 'ROOT',
-    COMPOUND_EXPRESSION = "COMPOUND_EXPRESSION"
+  TEXT = 'TEXT',
+  INTERPOLATION = 'INTERPOLATION',
+  SIMPLE_EXPRESSION = 'SIMPLE_EXPRESSION',
+  ELEMENT = 'ELEMENT',
+  ATTRIBUTE = 'ATTRIBUTE',
+  ROOT = 'ROOT',
+  COMPOUND_EXPRESSION = 'COMPOUND_EXPRESSION',
 }

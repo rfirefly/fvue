@@ -1,5 +1,5 @@
 import { reactive } from '@FVue/reactivity'
-import { hasInclude, hasOwn } from '@FVue/shared'
+import { hasInclude, hasOwn, ShapeFlags } from '@FVue/shared'
 
 export const initProps = (instance, rawProps) => {
   const props = {}
@@ -18,6 +18,10 @@ export const initProps = (instance, rawProps) => {
   }
   instance.props = reactive(props)
   instance.attrs = attrs
+  // 兼容函数组件
+  if (instance.vnode.shapeFlag & ShapeFlags.FUNCTIONAL_COMPONENT) {
+    instance.props = attrs
+  }
 }
 
 export const updateProps = (prevProps, nextProps) => {
@@ -31,7 +35,9 @@ export const updateProps = (prevProps, nextProps) => {
     }
   }
 }
-
+export const updateSlots = (instance, nextSlots) => {
+  Object.assign(instance.slots, nextSlots)
+}
 export const hasPropsChanged = (prevProps = {}, nextProps = {}) => {
   const nextKeys = Object.keys(nextProps)
   const prevKeys = Object.keys(prevProps)
@@ -46,10 +52,9 @@ export const hasPropsChanged = (prevProps = {}, nextProps = {}) => {
 }
 
 export const shouldUpdateComponent = (n1, n2) => {
-  console.log('🚀 ~ n1, n2', n1, n2)
   const { props: prevProps, children: prevChildren } = n1
   const { props: nextProps, children: nextChildren } = n2
-  if (prevProps === nextProps) return false
   if (prevChildren || nextChildren) return true
+  if (prevProps === nextProps) return false
   return hasPropsChanged(prevProps, nextProps)
 }

@@ -4,17 +4,18 @@ import { initProps } from './componentProps'
 
 export let currentInstance = null
 
-export const setCurrentInstance = instance => (currentInstance = instance)
+export const setCurrentInstance = (instance) => (currentInstance = instance)
 export const getCurrentInstance = () => currentInstance
 
 const publicPropertyMap = {
-  $attrs: instance => instance.attrs,
-  $slots: instance => instance.slots,
+  $attrs: (instance) => instance.attrs,
+  $slots: (instance) => instance.slots,
 }
 
 export const createComponentInstance = (vnode, parent) => {
   let { props: propsOptions = {} } = vnode.type
   const instance = {
+    ctx: {},
     provides: parent?.provides || Object.create(null),
     parent,
     data: null,
@@ -73,11 +74,10 @@ const initSlots = (instance, children) => {
   }
 }
 
-export const setupComponent = instance => {
+export const setupComponent = (instance) => {
   let { props, type, children } = instance.vnode
   // 初始化props
   initProps(instance, props)
-
   initSlots(instance, children)
   // 初始化代理对象，用于取值
   instance.proxy = new Proxy(instance, publicInstanceProxy)
@@ -108,4 +108,13 @@ export const setupComponent = instance => {
     }
   }
   if (!instance.render) instance.render = render
+}
+
+export function renderComponent(instance) {
+  const { vnode, render, props } = instance
+  if (vnode.shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
+    return render.call(instance.proxy, instance.proxy)
+  } else {
+    return vnode.type(props)
+  }
 }

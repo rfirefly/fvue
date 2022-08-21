@@ -1,4 +1,10 @@
-import { isArray, isObject, isString, ShapeFlags } from '@FVue/shared'
+import {
+  isArray,
+  isFunction,
+  isObject,
+  isString,
+  ShapeFlags,
+} from '@FVue/shared'
 import { isTeleport } from './components/Teleport'
 
 export const Text = Symbol('Text')
@@ -15,8 +21,9 @@ export function isSameNode(n1, n2) {
 export function createVnode(type, props, children = null, patchFlag = 0) {
   let shapeFlag = 0
   if (isString(type)) shapeFlag = ShapeFlags.ELEMENT
-  if (isObject(type)) shapeFlag = ShapeFlags.STATEFUL_COMPONENT
   if (isTeleport(type)) shapeFlag = ShapeFlags.TELEPORT
+  if (isFunction(type)) shapeFlag = ShapeFlags.FUNCTIONAL_COMPONENT
+  if (isObject(type)) shapeFlag = ShapeFlags.STATEFUL_COMPONENT
   const vnode = {
     type,
     props,
@@ -57,13 +64,19 @@ export const createElementBlock = (type, props, children, patchFlag) => {
   return setupBlock(createVnode(type, props, children, patchFlag))
 }
 
-export const setupBlock = vnode => {
+export const setupBlock = (vnode) => {
   vnode.dynamicChildren = currentBlock
   currentBlock = null
   return vnode
 }
-export const toDisplayString = val => {
-  return isString(val) ? val : val === null ? '' : isObject(val) ? JSON.stringify(val) : String(val)
+export const toDisplayString = (val) => {
+  return isString(val)
+    ? val
+    : val === null
+    ? ''
+    : isObject(val)
+    ? JSON.stringify(val)
+    : String(val)
 }
 
 export { createVnode as createElementVNode }
