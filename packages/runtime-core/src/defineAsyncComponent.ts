@@ -4,9 +4,9 @@ import { h } from './h'
 import { Fragment } from './vnode'
 
 export function defineAsyncComponent(options) {
-  if (isFunction(options)) {
+  if (isFunction(options))
     options = { loader: options }
-  }
+
   return {
     setup() {
       const loaded = ref(false)
@@ -54,13 +54,13 @@ export function defineAsyncComponent(options) {
         }, delay)
       }
       return () => {
-        if (loaded.value) {
+        if (loaded.value)
           return h(comp)
-        } else if (error.value && errorComponent) {
+        else if (error.value && errorComponent)
           return h(errorComponent)
-        } else if (loading.value && loadingComponent) {
+        else if (loading.value && loadingComponent)
           return h(loadingComponent)
-        }
+
         return h(Fragment)
       }
     },

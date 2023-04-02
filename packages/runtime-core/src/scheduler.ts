@@ -3,10 +3,10 @@ let isFlushing = false
 const resovlePromise = Promise.resolve()
 
 // 组件异步更新
-export const queneJob = job => {
-  if (!quene.includes(job)) {
+export function queneJob(job) {
+  if (!quene.includes(job))
     quene.push(job)
-  }
+
   if (!isFlushing) {
     isFlushing = true
     resovlePromise.then(() => {
@@ -14,7 +14,7 @@ export const queneJob = job => {
       let copyQuene = quene.slice(0)
       quene.length = 0 // 防止更新时，触发更新
       for (let i = 0; i < copyQuene.length; i++) {
-        let job = copyQuene[i]
+        const job = copyQuene[i]
         job()
       }
       copyQuene = null

@@ -19,23 +19,23 @@ function parseChildren(context) {
   while (!isEnd(context)) {
     const source: string = context.source
     let node
-    if (source.startsWith('{{')) {
+    if (source.startsWith('{{'))
       node = parseInterpolation(context)
-    } else if (source.startsWith('<')) {
+    else if (source.startsWith('<'))
       node = parseElement(context)
-    } else {
+    else
       node = parseText(context)
-    }
-    if (!/^\s+$/.test(node.content)) {
+
+    if (!/^\s+$/.test(node.content))
       nodes.push(node)
-    }
   }
   return nodes
 }
 
 function isEnd(content) {
   const source = content.source
-  if (source.startsWith('</')) return true
+  if (source.startsWith('</'))
+    return true
   return !source
 }
 
@@ -54,10 +54,9 @@ function parseText(context) {
   let endIdx = context.source.length
   // 找到字符串结尾
   for (let i = 0; i < endTokens.length; i++) {
-    let idx = context.source.indexOf(endTokens[i])
-    if (idx !== -1 && idx < endIdx) {
+    const idx = context.source.indexOf(endTokens[i])
+    if (idx !== -1 && idx < endIdx)
       endIdx = idx
-    }
   }
 
   // 创建行列信息
@@ -97,9 +96,8 @@ function advancePositionWithMutation(context, source, endIdx) {
 
 function adcanceSpaces(context) {
   const match = /^[ \t\r\n\f]+/.exec(context.source)
-  if (match) {
+  if (match)
     advanceBy(context, match[0].length)
-  }
 }
 
 function getSelection(context, start, end?) {
@@ -123,14 +121,13 @@ function parseInterpolation(context) {
   const innerStart = getCursor(context)
   const innerEnd = getCursor(context)
   const rawContentLength = closeIdx - 2
-  let preContent = parseTextData(context, rawContentLength)
-  let content = preContent.trim()
+  const preContent = parseTextData(context, rawContentLength)
+  const content = preContent.trim()
   const startOffset = preContent.indexOf(content)
-  if (startOffset > 0) {
+  if (startOffset > 0)
     advancePositionWithMutation(innerStart, preContent, startOffset)
-  }
 
-  let endOffst = startOffset + content.length
+  const endOffst = startOffset + content.length
   advancePositionWithMutation(innerEnd, preContent, endOffst)
 
   advanceBy(context, 2)
@@ -150,9 +147,9 @@ function parseElement(context) {
   const ele = parseTag(context)
   if (!ele.isSelfClosing) {
     const children = parseChildren(context)
-    if (context.source.startsWith('</')) {
+    if (context.source.startsWith('</'))
       parseTag(context)
-    }
+
     ele.loc = getSelection(context, ele.loc.start)
     ele.children = children
   }
@@ -184,9 +181,9 @@ function parseTag(context) {
 function parseAttributes(context) {
   const props = []
   while (
-    context.source.length > 0 &&
-    !context.source.startsWith('/>') &&
-    !context.source.startsWith('>')
+    context.source.length > 0
+    && !context.source.startsWith('/>')
+    && !context.source.startsWith('>')
   ) {
     const attr = parseAttribute(context)
     if (attr) {
@@ -218,9 +215,9 @@ function parseAttribute(context) {
 }
 function parseAttributeValue(context) {
   const start = getCursor(context)
-  let quote = context.source[0]
+  const quote = context.source[0]
   let content
-  const isQuoted = quote === `"` || quote === `'`
+  const isQuoted = quote === '"' || quote === '\''
   if (isQuoted) {
     advanceBy(context, 1)
     const endIdx = context.source.indexOf(quote)

@@ -37,6 +37,7 @@ class ObjectRefImpl {
   get value() {
     return this.target[this.key]
   }
+
   set value(value) {
     this.target[this.key] = value
   }
@@ -48,24 +49,25 @@ export function toRef(target, key) {
 
 export function toRefs(obj) {
   const res = isArray(obj) ? new Array(obj.length) : {}
-  for (const key in res) {
+  for (const key in res)
     res[key] = toRef(obj, key)
-  }
+
   return res
 }
 
 export function proxyRefs(obj) {
   return new Proxy(obj, {
     get(target, key, recevier) {
-      let res = Reflect.get(target, key, recevier)
+      const res = Reflect.get(target, key, recevier)
       return res.__v_isRef ? res.value : res
     },
     set(target, key, value, recevier) {
-      let oldValue = target[key]
+      const oldValue = target[key]
       if (oldValue.__v_isRef) {
         oldValue.value = value
         return true
-      } else {
+      }
+      else {
         return Reflect.set(target, key, value, recevier)
       }
     },

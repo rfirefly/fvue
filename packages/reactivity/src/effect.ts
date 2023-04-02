@@ -1,6 +1,6 @@
 import { recordEffectScope } from './effectScope'
 
-let activeEffect: ReactiveEffect = undefined
+let activeEffect: ReactiveEffect
 
 export function cleanupEffect(effect: ReactiveEffect) {
   const { deps } = effect
@@ -15,9 +15,11 @@ export class ReactiveEffect {
   constructor(public fn, public scheduler = null) {
     recordEffectScope(this)
   }
+
   run() {
     // 非激活状态，无需依赖收集
-    if (!this.active) return this.fn()
+    if (!this.active)
+      return this.fn()
 
     // 依赖收集
     try {
@@ -28,11 +30,13 @@ export class ReactiveEffect {
 
       cleanupEffect(this)
       return this.fn()
-    } finally {
+    }
+    finally {
       activeEffect = this.parent
       this.parent = null
     }
   }
+
   stop() {
     this.active = false
     cleanupEffect(this)
@@ -53,19 +57,23 @@ export function effect(fn: Function, options: any = {}) {
 // 结构 {target: {attributes: Set[effect]}}
 const targetMap = new WeakMap()
 export function track(target, type, key) {
-  if (!activeEffect) return
+  if (!activeEffect)
+    return
   let depsMap = targetMap.get(target)
-  if (!depsMap) targetMap.set(target, (depsMap = new Map()))
+  if (!depsMap)
+    targetMap.set(target, (depsMap = new Map()))
 
   let deps = depsMap.get(key)
-  if (!deps) depsMap.set(key, (deps = new Set()))
+  if (!deps)
+    depsMap.set(key, (deps = new Set()))
 
   trackEffect(deps)
 }
 
 export function trackEffect(dep) {
-  if (!activeEffect) return
-  let shouldTrack = !dep.has(activeEffect)
+  if (!activeEffect)
+    return
+  const shouldTrack = !dep.has(activeEffect)
   if (shouldTrack) {
     dep.add(activeEffect)
     activeEffect.deps.add(dep)
@@ -75,8 +83,9 @@ export function trackEffect(dep) {
 export function trigget(target, type, key, value, oldValue) {
   const depsMap = targetMap.get(target)
   //   该对象未被依赖收集过，不处理
-  if (!depsMap) return
-  let effects = depsMap.get(key)
+  if (!depsMap)
+    return
+  const effects = depsMap.get(key)
   effects && triggerEffect(effects)
 }
 
@@ -86,11 +95,10 @@ export function triggerEffect(effects) {
     // 防止无限调用
     if (activeEffect !== effect) {
       // 可以自行调度
-      if (effect.scheduler) {
+      if (effect.scheduler)
         effect.scheduler()
-      } else {
+      else
         effect.run()
-      }
     }
   })
 }

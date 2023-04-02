@@ -4,7 +4,8 @@ export const nodeOps = {
   },
   remove(child) {
     const parentNode = child.parentNode
-    if (parentNode) parentNode.removeChild(child)
+    if (parentNode)
+      parentNode.removeChild(child)
   },
   setElementText(el, text) {
     el.textContent = text

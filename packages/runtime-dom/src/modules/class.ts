@@ -1,7 +1,6 @@
 export function patchClass(el, nextValue) {
-  if (!nextValue) {
+  if (!nextValue)
     el.removeAttribute('class')
-  } else {
+  else
     el.className = nextValue
-  }
 }

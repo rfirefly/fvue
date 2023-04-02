@@ -1,7 +1,6 @@
 export function patchAttr(el, key, nextValue) {
-  if (nextValue) {
+  if (nextValue)
     el.setAttribute(key, nextValue)
-  } else {
+  else
     el.removeAttribute(key)
-  }
 }

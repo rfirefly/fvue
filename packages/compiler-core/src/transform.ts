@@ -31,7 +31,8 @@ function traverseNode(ast, context) {
   for (let i = 0; i < nodeTransforms.length; i++) {
     const onExit = nodeTransforms[i](ast, context)
     onExit && exitsFns.push(onExit)
-    if (!context.currentNode) return
+    if (!context.currentNode)
+      return
   }
   switch (ast.type) {
     case NodeTypes.INTERPOLATION:
@@ -43,14 +44,12 @@ function traverseNode(ast, context) {
   }
   context.currentNode = ast
   let i = exitsFns.length
-  while (i--) {
+  while (i--)
     exitsFns[i]()
-  }
 }
 
 function traverseChildren(ast, context) {
   const children = ast.children
-  for (let i = 0; i < children.length; i++) {
+  for (let i = 0; i < children.length; i++)
     traverseNode(children[i], context)
-  }
 }

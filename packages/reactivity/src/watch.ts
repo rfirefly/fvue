@@ -3,31 +3,34 @@ import { ReactiveEffect } from './effect'
 import { isReactive } from './reactive'
 
 function traversal(val, set = new Set()) {
-  if (!isObject(val)) return val
+  if (!isObject(val))
+    return val
 
-  if (set.has(val)) return val
-  for (const key in val) {
+  if (set.has(val))
+    return val
+  for (const key in val)
     traversal(val[key], set)
-  }
+
   return val
 }
 
 export function watch(source, cb) {
   let getter
-  if (isReactive(source)) {
+  if (isReactive(source))
     getter = () => traversal(source)
-  } else if (isFunction(source)) {
+  else if (isFunction(source))
     getter = source
-  } else {
+  else
     return
-  }
+
   let cleanup
-  const onCleanup = fn => {
+  const onCleanup = (fn) => {
     cleanup = fn
   }
   let oldValue
   const job = () => {
-    if (cleanup) cleanup()
+    if (cleanup)
+      cleanup()
     const value = getter()
     cb(value, oldValue, onCleanup)
     oldValue = value

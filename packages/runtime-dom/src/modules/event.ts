@@ -6,13 +6,13 @@ function createInvoker(cb) {
 
 export function patchEvent(el, eventName, nextValue) {
   const invokers = el._vei || (el._vei = {})
-  let exits = invokers[eventName]
+  const exits = invokers[eventName]
   //   已绑定过事件
   if (exits && nextValue) {
     exits.value = nextValue
     return
   }
-  let event = eventName.slice(2).toLowerCase()
+  const event = eventName.slice(2).toLowerCase()
   if (!exits && nextValue) {
     const invoker = (invokers[eventName] = createInvoker(nextValue))
     el.addEventListener(event, invoker)

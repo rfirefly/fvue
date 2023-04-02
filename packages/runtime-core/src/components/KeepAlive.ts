@@ -5,12 +5,12 @@ import { isVnode } from '../vnode'
 
 function resetShapeFlag(vnode) {
   let shapeFlag = vnode.shapeFlag
-  if (shapeFlag & ShapeFlags.COMPONENT_KEEP_ALIVE) {
+  if (shapeFlag & ShapeFlags.COMPONENT_KEEP_ALIVE)
     shapeFlag -= ShapeFlags.COMPONENT_KEEP_ALIVE
-  }
-  if (shapeFlag & ShapeFlags.COMPONENT_SHOULD_KEEP_ALIVE) {
+
+  if (shapeFlag & ShapeFlags.COMPONENT_SHOULD_KEEP_ALIVE)
     shapeFlag -= ShapeFlags.COMPONENT_SHOULD_KEEP_ALIVE
-  }
+
   vnode.shapeFlag = shapeFlag
 }
 
@@ -54,25 +54,25 @@ export const KeepAliveImpl = {
     }
 
     return () => {
-      let vnode = slots.default && slots.default()
+      const vnode = slots.default && slots.default()
 
       if (
-        !isVnode(vnode) ||
-        !(vnode.shapeFlag & ShapeFlags.STATEFUL_COMPONENT)
-      ) {
+        !isVnode(vnode)
+        || !(vnode.shapeFlag & ShapeFlags.STATEFUL_COMPONENT)
+      )
         return vnode
-      }
+
       const comp = vnode.type
       const key = vnode.key || comp
       const name = comp.name
 
       if (
-        name &&
-        ((include && !include.split(',').includes(name)) ||
-          (exclude && exclude.split(',').includes(name)))
-      ) {
+        name
+        && ((include && !include.split(',').includes(name))
+          || (exclude && exclude.split(',').includes(name)))
+      )
         return vnode
-      }
+
       const cacheVnode = cache.get(key)
       if (cacheVnode) {
         vnode.component = cacheVnode.component
@@ -80,12 +80,12 @@ export const KeepAliveImpl = {
         vnode.shapeFlag |= ShapeFlags.COMPONENT_KEEP_ALIVE
         keys.delete(key)
         keys.add(key)
-      } else {
+      }
+      else {
         keys.add(key)
         paddingCacheKey = key
-        if (max && keys.size > max) {
+        if (max && keys.size > max)
           pruneCacheEntry(keys.values().next().value)
-        }
       }
       vnode.shapeFlag |= ShapeFlags.COMPONENT_SHOULD_KEEP_ALIVE
       current = vnode
@@ -94,4 +94,6 @@ export const KeepAliveImpl = {
   },
 }
 
-export const isKeepAlive = (vnode) => vnode.type._isKeepAlive
+export function isKeepAlive(vnode) {
+  return vnode.type._isKeepAlive
+}

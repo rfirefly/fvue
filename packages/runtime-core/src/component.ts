@@ -1,19 +1,23 @@
 import { proxyRefs, reactive } from '@FVue/reactivity'
-import { hasOwn, isFunction, isObject, ShapeFlags } from '@FVue/shared'
+import { ShapeFlags, hasOwn, isFunction, isObject } from '@FVue/shared'
 import { initProps } from './componentProps'
 
 export let currentInstance = null
 
-export const setCurrentInstance = (instance) => (currentInstance = instance)
-export const getCurrentInstance = () => currentInstance
-
-const publicPropertyMap = {
-  $attrs: (instance) => instance.attrs,
-  $slots: (instance) => instance.slots,
+export function setCurrentInstance(instance) {
+  return currentInstance = instance
+}
+export function getCurrentInstance() {
+  return currentInstance
 }
 
-export const createComponentInstance = (vnode, parent) => {
-  let { props: propsOptions = {} } = vnode.type
+const publicPropertyMap = {
+  $attrs: instance => instance.attrs,
+  $slots: instance => instance.slots,
+}
+
+export function createComponentInstance(vnode, parent) {
+  const { props: propsOptions = {} } = vnode.type
   const instance = {
     ctx: {},
     provides: parent?.provides || Object.create(null),
@@ -36,18 +40,18 @@ export const createComponentInstance = (vnode, parent) => {
 const publicInstanceProxy = {
   get(target, key) {
     const { data, props, setupState } = target
-    if (data && hasOwn(data, key)) {
+    if (data && hasOwn(data, key))
       return data[key]
-    }
-    if (setupState && hasOwn(setupState, key)) {
-      return setupState[key]
-    }
 
-    if (props && hasOwn(props, key)) {
+    if (setupState && hasOwn(setupState, key))
+      return setupState[key]
+
+    if (props && hasOwn(props, key))
       return props[key]
-    }
+
     const getter = publicPropertyMap[key]
-    if (getter) return getter(target)
+    if (getter)
+      return getter(target)
   },
   set(target, key, value) {
     const { data, props, setupState } = target
@@ -60,22 +64,21 @@ const publicInstanceProxy = {
       return true
     }
     if (props && hasOwn(props, key)) {
-      console.warn('attempt to set property ' + (key as string))
+      console.warn(`attempt to set property ${key as string}`)
       return false
     }
     return true
   },
 }
 
-const initSlots = (instance, children) => {
+function initSlots(instance, children) {
   const { shapeFlag } = instance.vnode
-  if (shapeFlag & ShapeFlags.SLOTS_CHILDREN) {
+  if (shapeFlag & ShapeFlags.SLOTS_CHILDREN)
     instance.slots = children
-  }
 }
 
-export const setupComponent = (instance) => {
-  let { props, type, children } = instance.vnode
+export function setupComponent(instance) {
+  const { props, type, children } = instance.vnode
   // 初始化props
   initProps(instance, props)
   initSlots(instance, children)
@@ -83,7 +86,8 @@ export const setupComponent = (instance) => {
   instance.proxy = new Proxy(instance, publicInstanceProxy)
   const data = type.data
   if (data) {
-    if (!isFunction(data)) console.warn('data is not a function')
+    if (!isFunction(data))
+      console.warn('data is not a function')
     instance.data = reactive(data.call(instance.proxy))
   }
   const { setup, render } = type
@@ -101,20 +105,19 @@ export const setupComponent = (instance) => {
     const setupResult = setup(instance.props, setupContent)
     setCurrentInstance(null)
 
-    if (isFunction(setupResult)) {
+    if (isFunction(setupResult))
       instance.render = setupResult
-    } else if (isObject(setupResult)) {
+    else if (isObject(setupResult))
       instance.setupState = proxyRefs(setupResult)
-    }
   }
-  if (!instance.render) instance.render = render
+  if (!instance.render)
+    instance.render = render
 }
 
 export function renderComponent(instance) {
   const { vnode, render, props } = instance
-  if (vnode.shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
+  if (vnode.shapeFlag & ShapeFlags.STATEFUL_COMPONENT)
     return render.call(instance.proxy, instance.proxy)
-  } else {
+  else
     return vnode.type(props)
-  }
 }

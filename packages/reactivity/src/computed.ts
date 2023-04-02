@@ -18,6 +18,7 @@ class ComputedRefImpl {
       }
     })
   }
+
   get value() {
     // 收集使用该计算属性的 Effect
     trackEffect(this._dep)
@@ -27,19 +28,21 @@ class ComputedRefImpl {
     }
     return this._value
   }
+
   set value(value: any) {
     this._value = this.setter(value)
   }
 }
 
-export const computed = getterOrOptions => {
-  let onlyGetter = isFunction(getterOrOptions)
+export function computed(getterOrOptions) {
+  const onlyGetter = isFunction(getterOrOptions)
   let getter
   let setter
   if (onlyGetter) {
     getter = getterOrOptions
     setter = () => console.log('no set')
-  } else {
+  }
+  else {
     getter = getterOrOptions.get
     setter = getterOrOptions.set
   }

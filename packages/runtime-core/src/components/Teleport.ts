@@ -4,14 +4,14 @@ export const TeleportImpl = {
     const { move, mountChildren, patchChildren } = internals
     if (!n1) {
       const target = document.querySelector(n2.props && n2.props.to)
-      if (target) {
+      if (target)
         mountChildren(n2.children, target)
-      }
-    } else {
+    }
+    else {
       patchChildren(n1, n2, container)
       if (n1.props.to !== n2.props.to) {
         const target = document.querySelector(n2.props && n2.props.to)
-        n2.children.forEach(vnode => {
+        n2.children.forEach((vnode) => {
           move(vnode, target)
         })
       }
@@ -19,4 +19,6 @@ export const TeleportImpl = {
   },
 }
 
-export const isTeleport = type => type.__isTeleport
+export function isTeleport(type) {
+  return type.__isTeleport
+}

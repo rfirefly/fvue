@@ -1,7 +1,6 @@
-import { NodeTypes } from "@FVue/shared";
+import { NodeTypes } from '@FVue/shared'
 
 export function transformElement(node, context) {
-  if (node.type === NodeTypes.ELEMENT) {
+  if (node.type === NodeTypes.ELEMENT)
     return () => {}
-  }
 }

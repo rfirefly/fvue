@@ -14,7 +14,8 @@ export const onUpdated = createHook(LifeCycleHooks.UPDATED)
 
 function createHook(type) {
   return (hook, target = currentInstance) => {
-    if (!target) return
+    if (!target)
+      return
     const hooks = target[type] || (target[type] = [])
     const wrappedHook = () => {
       setCurrentInstance(target)

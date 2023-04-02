@@ -17,7 +17,8 @@ export function transformText(node, context) {
             children.splice(i, 1, currentContainer)
           }
           currentContainer.children.push(`+(${child.content.content})`)
-        } else {
+        }
+        else {
           currentContainer = null
         }
       }
