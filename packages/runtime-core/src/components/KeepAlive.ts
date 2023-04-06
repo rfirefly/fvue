@@ -1,4 +1,4 @@
-import { ShapeFlags } from '@FVue/shared'
+import { ShapeFlags } from '@fvue/shared'
 import { getCurrentInstance } from '../component'
 import { onMounted, onUpdated } from '../lifeCifecycle'
 import { isVnode } from '../vnode'

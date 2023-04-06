@@ -1,4 +1,4 @@
-import { isArray, isObject } from '@FVue/shared'
+import { isArray, isObject } from '@fvue/shared'
 import { createVnode, isVnode } from './vnode'
 
 export function h(type, propsOrChildren = null, children?) {

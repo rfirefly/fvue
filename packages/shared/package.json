@@ -1,8 +1,14 @@
 {
-  "name": "shared",
+  "name": "@fvue/shared",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "main": "./dist/shared.cjs.js",
+  "module": "./dist/shared.esm.js",
+  "exports": {
+    ".": {
+      "require": "./dist/shared.cjs.js",
+      "import": "./dist/shared.esm.js"
+    }
+  },
   "buildOptions": {
     "name": "FShared",
     "format": [

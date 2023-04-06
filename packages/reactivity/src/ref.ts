@@ -1,4 +1,4 @@
-import { isArray, isObject } from '@FVue/shared'
+import { isArray, isObject } from '@fvue/shared'
 import { trackEffect, triggerEffect } from './effect'
 import { reactive } from './reactive'
 
@@ -9,7 +9,7 @@ function toReactive(val) {
 class RefImpl {
   public _value
   public _dep = new Set()
-  public __v_ref = true
+  public __v_isRef = true
   constructor(public rawVal) {
     this._value = toReactive(rawVal)
   }
@@ -30,6 +30,14 @@ class RefImpl {
 
 export function ref(value) {
   return new RefImpl(value)
+}
+
+export function isRef(val) {
+  return !!val.__v_isRef
+}
+
+export function unRef(val) {
+  return isRef(val) ? val.value : val
 }
 
 class ObjectRefImpl {
@@ -57,18 +65,17 @@ export function toRefs(obj) {
 
 export function proxyRefs(obj) {
   return new Proxy(obj, {
-    get(target, key, recevier) {
-      const res = Reflect.get(target, key, recevier)
-      return res.__v_isRef ? res.value : res
+    get(target, key, receiver) {
+      const res = Reflect.get(target, key, receiver)
+
+      return unRef(res)
     },
-    set(target, key, value, recevier) {
-      const oldValue = target[key]
-      if (oldValue.__v_isRef) {
-        oldValue.value = value
+    set(target, key, newValue, receiver) {
+      if (isRef(target[key]) && !isRef(newValue)) {
+        target[key].value = newValue
         return true
-      }
-      else {
-        return Reflect.set(target, key, value, recevier)
+      } else {
+        return Reflect.set(target, key, newValue, receiver)
       }
     },
   })

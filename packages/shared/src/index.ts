@@ -54,3 +54,7 @@ export const enum NodeTypes {
 }
 
 export const extend = Object.assign
+
+export function hasChanged(value: any, oldValue: any): boolean {
+  return !Object.is(value, oldValue)
+}

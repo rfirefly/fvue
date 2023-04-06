@@ -6,20 +6,20 @@ function createInvoker(cb) {
 
 export function patchEvent(el, eventName, nextValue) {
   const invokers = el._vei || (el._vei = {})
-  const exits = invokers[eventName]
+  let invoker = invokers[eventName]
   //   已绑定过事件
-  if (exits && nextValue) {
-    exits.value = nextValue
+  if (invoker && nextValue) {
+    invoker.value = nextValue
     return
   }
   const event = eventName.slice(2).toLowerCase()
-  if (!exits && nextValue) {
-    const invoker = (invokers[eventName] = createInvoker(nextValue))
+  if (!invoker && nextValue) {
+    invoker = (invokers[eventName] = createInvoker(nextValue))
     el.addEventListener(event, invoker)
   }
   // 如需要移除
-  if (exits && !nextValue) {
-    el.removeEventListener(event, exits)
+  if (invoker && !nextValue) {
+    el.removeEventListener(event, invoker)
     invokers[eventName] = undefined
   }
 }

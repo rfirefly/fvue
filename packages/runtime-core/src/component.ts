@@ -1,7 +1,8 @@
-import { proxyRefs, reactive } from '@FVue/reactivity'
-import { ShapeFlags, hasOwn, isFunction, isObject } from '@FVue/shared'
+import { proxyRefs, reactive } from '@fvue/reactivity'
+import { ShapeFlags, hasOwn, isFunction, isObject } from '@fvue/shared'
 import { initProps } from './componentProps'
 
+// eslint-disable-next-line import/no-mutable-exports
 export let currentInstance = null
 
 export function setCurrentInstance(instance) {
@@ -12,6 +13,7 @@ export function getCurrentInstance() {
 }
 
 const publicPropertyMap = {
+  $data: instance => instance.data,
   $attrs: instance => instance.attrs,
   $slots: instance => instance.slots,
 }

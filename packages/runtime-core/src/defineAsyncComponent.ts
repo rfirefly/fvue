@@ -1,5 +1,5 @@
-import { ref } from '@FVue/reactivity'
-import { isFunction } from '@FVue/shared'
+import { ref } from '@fvue/reactivity'
+import { isFunction } from '@fvue/shared'
 import { h } from './h'
 import { Fragment } from './vnode'
 

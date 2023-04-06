@@ -1,4 +1,4 @@
-import { reactive } from '@FVue/reactivity'
+import { reactive } from '@fvue/reactivity'
 import { describe, expect, it } from 'vitest'
 
 describe('reactive', () => {

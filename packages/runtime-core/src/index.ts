@@ -1,7 +1,7 @@
 export { h } from './h'
 export { createRenderer } from './renderer'
 export * from './lifeCifecycle'
-export * from '@FVue/reactivity'
+export * from '@fvue/reactivity'
 
 export * from './vnode'
 

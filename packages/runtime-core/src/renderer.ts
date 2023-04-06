@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { ReactiveEffect } from '@FVue/reactivity'
-import { ShapeFlags, invokeFns } from '@FVue/shared'
+import { ReactiveEffect } from '@fvue/reactivity'
+import { ShapeFlags, invokeFns } from '@fvue/shared'
 import { createComponentInstance, renderComponent, setupComponent } from './component'
 import { shouldUpdateComponent, updateProps, updateSlots } from './componentProps'
 import { isKeepAlive } from './components/KeepAlive'

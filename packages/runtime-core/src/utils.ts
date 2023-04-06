@@ -1,4 +1,4 @@
-import { isNumber, isString } from '@FVue/shared'
+import { isNumber, isString } from '@fvue/shared'
 import { Text, createVnode } from './vnode'
 
 export function normalize(child) {

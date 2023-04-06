@@ -1,8 +1,16 @@
 {
-  "name": "reactivity",
+  "name": "@fvue/reactivity",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/reactivity.cjs.js",
+  "module": "./dist/reactivity.esm.js",
+  "exports": {
+    ".": {
+      "require": "./dist/reactivity.cjs.js",
+      "import": "./dist/reactivity.esm.js",
+      "default": "./dist/reactivity.iife.js"
+    }
+  },
   "buildOptions": {
     "name": "FReactivity",
     "format": [

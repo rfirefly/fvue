@@ -4,7 +4,7 @@ import {
   isFunction,
   isObject,
   isString,
-} from '@FVue/shared'
+} from '@fvue/shared'
 import { isTeleport } from './components/Teleport'
 
 export const Text = Symbol('Text')
@@ -23,12 +23,13 @@ export function createVnode(type, props, children = null, patchFlag = 0) {
   let shapeFlag = 0
   if (isString(type))
     shapeFlag = ShapeFlags.ELEMENT
-  if (isTeleport(type))
+  else if (isTeleport(type))
     shapeFlag = ShapeFlags.TELEPORT
-  if (isFunction(type))
+  else if (isFunction(type))
     shapeFlag = ShapeFlags.FUNCTIONAL_COMPONENT
-  if (isObject(type))
+  else if (isObject(type))
     shapeFlag = ShapeFlags.STATEFUL_COMPONENT
+
   const vnode = {
     type,
     props,

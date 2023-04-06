@@ -1,5 +1,5 @@
-import { createRenderer } from '@FVue/runtime-core'
-import { isString } from '@FVue/shared'
+import { createRenderer } from '@fvue/runtime-core'
+import { isString } from '@fvue/shared'
 import { nodeOps } from './nodeOps'
 import { patchProp } from './patchProp'
 
@@ -12,4 +12,4 @@ export function render(vnode, containder) {
   createRenderer(renderOptions).render(vnode, containder)
 }
 
-export * from '@FVue/runtime-core'
+export * from '@fvue/runtime-core'

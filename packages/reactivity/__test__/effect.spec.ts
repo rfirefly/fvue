@@ -1,6 +1,5 @@
 import { describe, expect, it, vitest } from 'vitest'
-import { reactive } from '../resrc/reactive'
-import { effect, stop } from '../resrc/effect'
+import { effect, reactive, stop } from '@fvue/reactivity'
 
 describe('effect', () => {
   it('happy path', () => {
@@ -64,7 +63,7 @@ describe('effect', () => {
     expect(dummy).toBe(4)
   })
 
-  it.skip('stop', () => {
+  it('stop', () => {
     let dummy
     const obj = reactive({ a: 2 })
 
@@ -78,26 +77,11 @@ describe('effect', () => {
     // stop 仅对runner生效，对 reactive，他会重新收集effect，并执行
     runner.effect.stop()
     obj.a++
-    runner()
+    obj.a++
     expect(dummy).toBe(3)
-  })
 
-  it('stop', () => {
-    let dummy
-    const obj = reactive({ prop: 1 })
-    const runner = effect(() => {
-      dummy = obj.prop
-    })
-    obj.prop = 2
-    expect(dummy).toBe(2)
-    stop(runner)
-    // obj.prop = 3
-    obj.prop++
-    expect(dummy).toBe(2)
-
-    // stopped effect should still be manually callable
     runner()
-    expect(dummy).toBe(3)
+    expect(dummy).toBe(5)
   })
 
   it('events: onStop', () => {

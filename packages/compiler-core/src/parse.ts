@@ -1,4 +1,4 @@
-import { NodeTypes } from '@FVue/shared'
+import { NodeTypes } from '@fvue/shared'
 
 export function parse(template) {
   const context = createParserContext(template)

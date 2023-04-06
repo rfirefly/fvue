@@ -1,25 +1,29 @@
-import { isObject } from '@FVue/shared'
-import { ReactiveFlags, mutableHandlers } from './baseHandler'
+import { isObject } from '@fvue/shared'
+import { ReactiveFlags, mutableHandlers, readonlyHandlers, shadowReadonlyHandlers } from './baseHandler'
 
 export function isReactive(target) {
   return !!(target && target[ReactiveFlags.IS_REACTIVE])
 }
 
-const reactiveMap = new WeakMap()
-export function reactive(target: object) {
+function createReactiveObject(target: object, handler: ProxyHandler<any>) {
   if (!isObject(target))
     return
+  return new Proxy(target, handler)
+}
+export function reactive(target: object) {
+  return createReactiveObject(target, mutableHandlers)
+}
 
-  //   已代理过的对象，直接返回缓存的代理对象
-  const existProxy = reactiveMap.get(target)
-  if (existProxy)
-    return existProxy
-  // 若传入以代理过的对象，直接返回
-  if (target[ReactiveFlags.IS_REACTIVE])
-    return target
-  //   对对象进行代理
-  const proxy = new Proxy(target, mutableHandlers)
-  //   缓存代理对象
-  reactiveMap.set(target, proxy)
-  return proxy
+export function isReadonly(target: object) {
+  return !!(target && target[ReactiveFlags.IS_READONLY])
+}
+export function readonly(target) {
+  return createReactiveObject(target, readonlyHandlers)
+}
+export function shadowReadonly(target) {
+  return createReactiveObject(target, shadowReadonlyHandlers)
+}
+
+export function isProxy(target: object) {
+  return isReactive(target) || isReadonly(target)
 }

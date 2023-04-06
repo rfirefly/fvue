@@ -1,4 +1,4 @@
-import { NodeTypes } from '@FVue/shared'
+import { NodeTypes } from '@fvue/shared'
 import { TO_DISPLAY_STRING } from './runtimeHelpers'
 import { transformElement } from './transforms/transformElement'
 import { transformExpression } from './transforms/transformExpression'

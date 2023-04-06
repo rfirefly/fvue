@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { reactive } from '../resrc/reactive'
+import { isProxy, isReactive, reactive } from '@fvue/reactivity'
 
 describe('reactive', () => {
   it('happy path', () => {
@@ -25,5 +25,17 @@ describe('reactive', () => {
         "b": 2,
       }
     `)
+  })
+
+  it('is reactive', () => {
+    const original = { a: 2, b: { c: 9 }, c: [{ c: 9 }] }
+
+    expect(isReactive(original)).toBe(false)
+
+    const observed = reactive(original)
+    expect(isReactive(observed.b)).toBe(true)
+    expect(isReactive(observed.c)).toBe(true)
+    expect(isReactive(observed.c[0])).toBe(true)
+    expect(isProxy(observed)).toBe(true)
   })
 })

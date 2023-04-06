@@ -1,5 +1,5 @@
-import { reactive } from '@FVue/reactivity'
-import { ShapeFlags, hasInclude, hasOwn } from '@FVue/shared'
+import { shadowReadonly } from '@fvue/reactivity'
+import { ShapeFlags, hasInclude, hasOwn } from '@fvue/shared'
 
 export function initProps(instance, rawProps) {
   const props = {}
@@ -15,7 +15,7 @@ export function initProps(instance, rawProps) {
         attrs[key] = value
     }
   }
-  instance.props = reactive(props)
+  instance.props = shadowReadonly(props)
   instance.attrs = attrs
   // 兼容函数组件
   if (instance.vnode.shapeFlag & ShapeFlags.FUNCTIONAL_COMPONENT)

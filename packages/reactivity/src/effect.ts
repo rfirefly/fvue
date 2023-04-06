@@ -1,3 +1,4 @@
+import { extend } from '@fvue/shared'
 import { recordEffectScope } from './effectScope'
 
 let activeEffect: ReactiveEffect
@@ -10,6 +11,7 @@ export function cleanupEffect(effect: ReactiveEffect) {
 export class ReactiveEffect {
   public parent = null
   public active = true
+  private onStop: () => void
   //   记录所有他依赖的属性
   public deps = new Set<Set<ReactiveEffect>>()
   constructor(public fn, public scheduler = null) {
@@ -26,6 +28,7 @@ export class ReactiveEffect {
       // 利用链式结构，处理嵌套effect 导致 activeEffect 指向错误问题
       this.parent = activeEffect
       // 此时，fn可以获取到 当前运行的effect
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
       activeEffect = this
 
       cleanupEffect(this)
@@ -33,6 +36,8 @@ export class ReactiveEffect {
     }
     finally {
       activeEffect = this.parent
+
+      this.onStop && this.onStop()
       this.parent = null
     }
   }
@@ -46,12 +51,20 @@ export class ReactiveEffect {
 export function effect(fn: Function, options: any = {}) {
   // fn 可以根据状态变化，重新执行。并且可以嵌套
   const _effect = new ReactiveEffect(fn, options.scheduler)
+
+  extend(_effect, options)
+
   // 先执行一遍
   _effect.run()
 
   const runner = _effect.run.bind(_effect)
   runner.effect = _effect
   return runner
+}
+
+export function stop(runner) {
+  const { effect } = runner
+  effect.stop()
 }
 
 // 结构 {target: {attributes: Set[effect]}}
@@ -80,7 +93,7 @@ export function trackEffect(dep) {
   }
 }
 
-export function trigget(target, type, key, value, oldValue) {
+export function trigger(target, type, key) {
   const depsMap = targetMap.get(target)
   //   该对象未被依赖收集过，不处理
   if (!depsMap)

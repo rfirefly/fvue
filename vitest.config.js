@@ -8,7 +8,7 @@ export default defineConfig({
   resolve: {
     alias: [
       {
-        find: /@FVue\/([\w-]*)/,
+        find: /@fvue\/([\w-]*)/,
         replacement: `${path.resolve(__dirname, 'packages')}/$1/src`,
       },
     ],

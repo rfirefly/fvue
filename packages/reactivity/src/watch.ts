@@ -1,4 +1,4 @@
-import { isFunction, isObject } from '@FVue/shared'
+import { isFunction, isObject } from '@fvue/shared'
 import { ReactiveEffect } from './effect'
 import { isReactive } from './reactive'
 

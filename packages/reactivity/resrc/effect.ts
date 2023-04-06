@@ -1,6 +1,7 @@
-import { extend } from '@FVue/shared'
+import { extend } from '@fvue/shared'
 
 let activeEffect: ReactiveEffect
+let shouldTrack = true
 
 function cleanupEffect(effect: ReactiveEffect) {
   const { deps } = effect
@@ -10,7 +11,7 @@ function cleanupEffect(effect: ReactiveEffect) {
   deps.length = 0
 }
 
-class ReactiveEffect {
+export class ReactiveEffect {
   deps: Array<Set<ReactiveEffect>> = []
   onStop: () => void
   private active = true
@@ -18,15 +19,15 @@ class ReactiveEffect {
   }
 
   run() {
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-this-alias
-      activeEffect = this
-      const res = this._fn()
+    if (!this.active)
+      return this._fn()
 
-      return res
-    } finally {
-      activeEffect = undefined
-    }
+    shouldTrack = true
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    activeEffect = this
+    const res = this._fn()
+    shouldTrack = false
+    return res
   }
 
   stop() {
@@ -60,7 +61,7 @@ export function stop(runner) {
 
 const targetMap = new WeakMap()
 export function track(target: object, type: string, key: string | symbol) {
-  if (!activeEffect)
+  if (!activeEffect || !shouldTrack)
     return
 
   let depsMap = targetMap.get(target)
@@ -89,12 +90,16 @@ export function trigger(target: object, type: string, key: string | symbol) {
     return
   const effects = depsMap.get(key)
 
+  triggerEffect(effects)
+}
+
+export function triggerEffect(effects) {
   if (!effects)
     return
 
   effects.forEach((effect: ReactiveEffect) => {
     if (effect.scheduler) {
-      // 更新调用 scheduler
+    // 更新调用 scheduler
       effect.scheduler()
     } else {
       effect.run()

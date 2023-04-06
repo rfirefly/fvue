@@ -1,0 +1,28 @@
+{
+  "name": "runtime-core_cxs",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "dist/mini-vue.cjs.js",
+  "module": "dist/mini-vue.esm.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "rollup -c rollup.config.js -w",
+    "build": "rollup -c rollup.config.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-alias": "^5.0.0",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.2",
+    "@rollup/plugin-typescript": "^11.1.0",
+    "rollup": "^3.20.2",
+    "tslib": "^2.5.0"
+  },
+  "dependencies": {
+    "@fvue/reactivity": "workspace:^1.0.0",
+    "@fvue/shared": "workspace:^1.0.0"
+  }
+}
